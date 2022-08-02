@@ -3,20 +3,20 @@
   *Giving a distinct purpose and theme to Pomodoro sessions to stay on focused on priorities. Tracking progress and designing schedule to support freelancing, learning or working with use of an enhaced Pomodoro Technique. It encourages rethinking of the time dedicated to a range of activities in order to maintain balance.*
  
 
-**MVP 1.0 To-Do/Feature List:**
+**MVP v1.0 To-Do/Feature List:**
  
 
-1. Main menu:
+v0.1 - Main menu:
 
-- [ ] Q to start/resume the default routine (only if loaded the default one)
-- [ ] A to run alternate option start/resume (only if loaded the default one)
-- [ ] W to select the default Pomodoro routine
-- [ ] E to edit an existing routine
-- [ ] Explain how it works briefly
-- [ ] *Main menu* **COMPLETE**
+- [x] Q to start/resume the default routine (only if loaded the default one)
+- [x] A to run alternate option start/resume (only if loaded the default one)
+- [x] W to select the default Pomodoro routine
+- [x] E to edit an existing routine
+- [x] Explain how it works briefly
+- [x] *Main menu* **COMPLETE**
 
   
-2. Create and Save Routine:
+v0.2 -  Create and Save Routine:
 - [ ] Explain the dictionary:
    - [ ] Session: a Pomodoro session followed by a short or a long break
   - [ ] Set: intended number of repetitions of the sessions ended by a long break
@@ -44,13 +44,13 @@
 
   
 
-3. *Load Default Routine* into the config file
+v0.3 - *Load Default Routine* into the config file
 - [ ] Request the name of the routine to be autoloaded (from the root folder? documents?) during the startup.
 - [ ] Go back to the main menu
 - [ ] *Load Default Routine* **COMPLETE**
 
   
-4. Run Default Routine
+v0.4 - Run Default Routine
 
 - [ ] Prompt there’s no routine selected as default
 - [ ] Display the complete routine
@@ -59,7 +59,7 @@
 - [ ] Track current progress and save it into the routine file
 - [ ] Design basic count-down function  
 
-5. Edit and Save Routine
+v1.0 - Edit and Save Routine
 
 - [ ] Load the routine that the user has typed in
 - [ ] Preview it
@@ -75,5 +75,5 @@ v1.1
 - [ ]  Better progress visualization (a progress bar next to each scheduled session)
 - [ ] add tracking stats for encouragement
 
-  v2.0
+v2.0
 - [ ] Convert into a WPF app with GUI
