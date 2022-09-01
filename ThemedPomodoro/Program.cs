@@ -1,23 +1,24 @@
 ﻿using static ThemedPomodoro.Mode;
-
-bool routineLoaded = true;
-bool routineTypeDaily = false;
-bool correctUserInput = false;
-string validMainMenuUserChoice;
-string loadedRoutineName = "test";
 MainMenu();
 
 void MainMenu()
 {
+    Console.Clear();
+
+    bool routineLoaded = true;
+    bool routineTypeDaily = false;
+    string validMainMenuUserChoice;
+    string loadedRoutineName = "test";
+
     ReadGlobalConfigFile();
 
     Console.WriteLine("Themed Pomodoro");
     Console.WriteLine("---------------");
     Console.WriteLine();
 
-    DisplayMainMenuChoices();
-    validMainMenuUserChoice = MainMenuUserInput();
-    GoToMenu(validMainMenuUserChoice);
+    DisplayMainMenuChoices(); // displaying the options to the user depending on the loaded routine
+    validMainMenuUserChoice = MainMenuUserInput(); // getting input from the user
+    GoToMenu(validMainMenuUserChoice); // going into sub menus
 
     void GoToMenu(string vMainMenuUserChoice)
     {
@@ -40,12 +41,13 @@ void MainMenu()
                 break;
         }
     }
-    void ReadGlobalConfigFile()
+    void ReadGlobalConfigFile() // loading initial settings
     {
-        Console.Write("");
+        Console.Write(""); // placeholder for now
     }
     string MainMenuUserInput()
     {
+        bool correctUserInput = false;
         string goToMenu = "";
         while (!correctUserInput)
         {
