@@ -53,11 +53,13 @@ v0.2.1 -  Create and Save Routine:
 - [x] Changed default location for saving routines.
   
 
-v0.3 - *Load Default Routine* into the config file
+v0.3 - *Select Default Routine* into the config file
 
-- [ ] Request the name of the routine to be autoloaded (from the root folder? documents?) during the startup.
-- [ ] Go back to the main menu
-- [ ] *Load Default Routine* **COMPLETE**
+-
+- [X] Create a config file or load config when exists at at startup
+- [X] Request the name of the routine to be autoloaded (from the root folder? documents?) during the startup.
+- [X] Go back to the main menu
+- [X] *Load Default Routine* **COMPLETE**
 
   
 v0.4 - Run Default Routine

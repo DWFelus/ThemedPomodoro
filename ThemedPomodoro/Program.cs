@@ -6,17 +6,68 @@ public partial class Mode
         MainMenu();
         static void MainMenu()
         {
-            Console.Clear();
+            string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
+            bool rootExists = false;
+            string defaultRoutine = "";
+            string lastSession = "";
 
             bool routineLoaded = true;
             bool routineTypeDaily = false;
             string validMainMenuUserChoice;
-            string loadedRoutineName = "test";
 
-            ReadGlobalConfigFile();
+            Config();
+            void Config()
+            {
+                if (!Directory.Exists(rootFolder))
+                {
+                    Directory.CreateDirectory(rootFolder);
+                    rootExists = true;
+                }
 
+                else
+                {
+                    rootExists = true;
+                }
+
+                if (rootExists && !File.Exists(rootFolder + "config.txt"))
+                {
+                    GenerateEmptyConfigFile();
+                }
+
+                LoadConfigFile();
+            }
+            void GenerateEmptyConfigFile()
+            {
+                TextWriter tw = new StreamWriter(rootFolder + "config.txt");
+                tw.WriteLine("");
+                tw.Close();
+            }
+            void LoadConfigFile()
+            {
+                TextReader tr = new StreamReader(rootFolder + "config.txt");
+                defaultRoutine = tr.ReadLine();
+                tr.Close();
+                Console.WriteLine("defaultRoutine: " + defaultRoutine); //debug
+                if (!string.IsNullOrEmpty(defaultRoutine))
+                {
+                    TextReader tr1 = new StreamReader(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt");
+                    lastSession = tr1.ReadLine();
+                    tr1.Close();
+                }
+
+                else
+                {
+                    defaultRoutine = "No Routine Loaded";
+                }
+                Console.WriteLine("lastSession: " + lastSession); //debug
+            }
+
+            Console.Clear();
+
+            Console.BackgroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Themed Pomodoro");
             Console.WriteLine("---------------");
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine();
 
             DisplayMainMenuChoices(); // displaying the options to the user depending on the loaded routine
@@ -48,10 +99,6 @@ public partial class Mode
                         MainMenu();
                         break;
                 }
-            }
-            void ReadGlobalConfigFile() // loading initial settings
-            {
-                Console.Write(""); // placeholder for now
             }
             string MainMenuUserInput()
             {
@@ -127,7 +174,7 @@ public partial class Mode
                 Console.WriteLine("---------");
                 Console.WriteLine();
 
-                if (routineLoaded) Console.WriteLine("Loaded Default Routine - " + loadedRoutineName);
+                if (routineLoaded) Console.WriteLine("Loaded Default Routine - " + defaultRoutine);
                 Console.WriteLine();
 
                 if (routineLoaded)

@@ -507,6 +507,10 @@ namespace ThemedPomodoro
                     tw3.WriteLine(generatedRoutine[i]);
                 }
                 tw3.Close();
+
+                TextWriter tw4 = new StreamWriter(filePath + routineName + "_lastSession.txt");
+                tw4.WriteLine("0");
+                tw4.Close();
             }
 
             //
