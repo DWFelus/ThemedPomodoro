@@ -416,8 +416,12 @@ namespace ThemedPomodoro
                 string input = "";
                 do
                 {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                     input = Console.ReadLine();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     input = input.Trim().ToUpper();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                     if (input == null || !Regex.IsMatch(input, @"[a-zA-Z0-9]"))
                     {
                         Console.WriteLine("Name field cannot be empty and must contain at least one letter or number");
@@ -480,22 +484,24 @@ namespace ThemedPomodoro
                 routine.Add(shortBreakLength.ToString());
                 routine.Add(longBreakLength.ToString());
 
-                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + routineName;
-                TextWriter tw = new StreamWriter(filePath + ".txt");
+                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    + @"\ThemedPomodoro\" + routineName + @"\";
+                System.IO.Directory.CreateDirectory(filePath);
+                TextWriter tw = new StreamWriter(filePath + routineName + "_config.txt");
                 for (int i = 0; i < routine.Count; i++)
                 {
                     tw.WriteLine(routine[i]);
                 }
                 tw.Close();
 
-                TextWriter tw2 = new StreamWriter(filePath + "_userThemes.txt");
+                TextWriter tw2 = new StreamWriter(filePath + routineName + "_userThemes.txt");
                 for (int i = 0; i < userThemes.Count; i++)
                 {
                     tw2.WriteLine(userThemes[i]);
                 }
                 tw2.Close();
 
-                TextWriter tw3 = new StreamWriter(filePath + "_routine.txt");
+                TextWriter tw3 = new StreamWriter(filePath + routineName + "_routine.txt");
                 for (int i = 0; i < generatedRoutine.Count; i++)
                 {
                     tw3.WriteLine(generatedRoutine[i]);

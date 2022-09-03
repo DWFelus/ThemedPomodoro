@@ -49,6 +49,8 @@ v0.2 -  Create and Save Routine:
 - [x] Go back to the main menu
 - [x] *Create and Save Routine* **COMPLETE**
 
+v0.2.1 -  Create and Save Routine:
+- [x] Changed default location for saving routines.
   
 
 v0.3 - *Load Default Routine* into the config file
