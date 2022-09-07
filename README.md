@@ -49,9 +49,9 @@ v0.2 -  Create and Save Routine:
 - [x] Go back to the main menu
 - [x] *Create and Save Routine* **COMPLETE**
 
-v0.2.1 -  Create and Save Routine:
+v0.2.1
 - [x] Changed default location for saving routines.
-  
+
 
 v0.3 - *Select Default Routine* into the config file
 
@@ -60,6 +60,10 @@ v0.3 - *Select Default Routine* into the config file
 - [X] Request the name of the routine to be autoloaded (from the root folder? documents?) during the startup.
 - [X] Go back to the main menu
 - [X] *Load Default Routine* **COMPLETE**
+
+v0.3.1
+- [x] In Program.cs, show running routine option only if a routine is loaded.
+- [x] In Program.cs, read routine type.
 
   
 v0.4 - Run Default Routine

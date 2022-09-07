@@ -11,7 +11,7 @@ public partial class Mode
             string defaultRoutine = "";
             string lastSession = "";
 
-            bool routineLoaded = true;
+            bool routineLoaded = false;
             bool routineTypeDaily = false;
             string validMainMenuUserChoice;
 
@@ -52,12 +52,24 @@ public partial class Mode
                 {
                     TextReader tr1 = new StreamReader(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt");
                     lastSession = tr1.ReadLine();
+                    routineLoaded = true;
                     tr1.Close();
+
+                    if (File.ReadLines(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt").ElementAtOrDefault(1) == "daily")
+                    {
+                        routineTypeDaily = true;
+                    }
+
+                    else
+                    {
+                        routineTypeDaily = false;
+                    }
                 }
 
                 else
                 {
                     defaultRoutine = "No Routine Loaded";
+                    routineLoaded = false;
                 }
                 Console.WriteLine("lastSession: " + lastSession); //debug
             }
