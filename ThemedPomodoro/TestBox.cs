@@ -7,8 +7,6 @@ namespace ThemedPomodoro
         public static void TestBox()
         {
 
-
         }
     }
-
 }

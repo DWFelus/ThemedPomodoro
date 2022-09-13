@@ -7,7 +7,8 @@ public partial class Mode
         MainMenu();
         static void MainMenu()
         {
-
+            Console.WindowHeight = 40;
+            Console.WindowWidth = 90;
             string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
             bool rootExists = false;
             string defaultRoutine = "";
@@ -17,6 +18,7 @@ public partial class Mode
             bool routineTypeDaily = false;
             string validMainMenuUserChoice;
             bool lastSessionPresent = false;
+            bool routinesExist = false;
 
             bool dailySecondaryAvailable = false;
             bool cycleSecondaryAvailable = false;
@@ -49,6 +51,20 @@ public partial class Mode
                 GenerateEmptyConfigFile();   //... if there is none.
                 LoadConfigFile();
                 CheckForSecondaryAvailibilty();
+                CheckForExistingRoutines();
+            }
+
+            void CheckForExistingRoutines()
+            {
+                string[] directories = Directory.GetDirectories(rootFolder);
+                if (directories.Length == 0)
+                {
+                    routinesExist = false;
+                }
+                else
+                {
+                    routinesExist = true;
+                }
             }
 
             void CheckForRootFolder()
@@ -85,15 +101,23 @@ public partial class Mode
                 {
                     routineLoaded = true;
                     CheckForLastSesion();
-                    if (File.ReadLines(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt").ElementAtOrDefault(1) == "daily")
+                    if (File.Exists(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt"))
                     {
-                        routineTypeDaily = true;
-                    }
+                        if (File.ReadLines(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt").ElementAtOrDefault(1) == "daily")
+                        {
+                            routineTypeDaily = true;
+                        }
 
+                        else
+                        {
+                            routineTypeDaily = false;
+                        }
+                    }
                     else
                     {
-                        routineTypeDaily = false;
+                        routineLoaded = false;
                     }
+
                 }
 
                 else
@@ -120,7 +144,6 @@ public partial class Mode
                     lastSession = "0";
                     lastSessionPresent = false;
                 }
-
             }
 
             void CheckForSecondaryAvailibilty()
@@ -131,10 +154,12 @@ public partial class Mode
                 {
                     if (!File.Exists(rLastSessionPath))
                     {
-
                         cycleSecondaryAvailable = true;
                     }
-
+                    else
+                    {
+                        cycleSecondaryAvailable = false;
+                    }
                 }
 
                 if (routineLoaded && routineTypeDaily)
@@ -148,7 +173,6 @@ public partial class Mode
                         dailySecondaryAvailable = true;
                     }
                 }
-
             }
 
             //
@@ -188,7 +212,7 @@ public partial class Mode
                 string goToMenu = "";
                 while (!correctUserInput)
                 {
-                    Console.Write("Enter Q/W/E/R/T to choose an option: ");
+                    Console.Write("Enter a letter to choose an option: ");
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                     string mainMenuUserInput = Console.ReadLine().ToUpper();
@@ -216,37 +240,57 @@ public partial class Mode
 
                             break;
                         case "A":
-                            if (routineLoaded == true)
-                            {
-                                correctUserInput = true;
-                                goToMenu = "RunRoutineSecondary";
-                                Console.WriteLine();
-                            }
-                            else if (routineLoaded == true && routineTypeDaily && dailySecondaryAvailable == false)
+
+                            if (routineLoaded == true && routineTypeDaily && dailySecondaryAvailable == false)
                             {
                                 Console.WriteLine("Invalid choice");
                             }
 
-                            else if (routineLoaded == true && !routineTypeDaily && cycleSecondaryAvailable == false)
+                            /*else if (routineLoaded == true && !routineTypeDaily && cycleSecondaryAvailable == false)
                             {
-                                Console.WriteLine("Invalid choice");
+                                Console.WriteLine("Invalid choicedd");
+                            }*/
+
+                            else if (routineLoaded == true)
+                            {
+                                correctUserInput = true;
+                                goToMenu = "RunRoutineSecondary";
+                                Console.WriteLine();
                             }
 
                             else
                             {
                                 Console.WriteLine("Invalid choice");
                             }
+
                             break;
                         case "W":
-                            correctUserInput = true;
-                            goToMenu = "SelectRoutine";
-                            Console.WriteLine();
+                            if (routinesExist == true)
+                            {
+                                correctUserInput = true;
+                                goToMenu = "SelectRoutine";
+                                Console.WriteLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid choice");
+                            }
+
                             break;
                         case "E":
-                            goToMenu = "EditRoutine";
-                            Console.WriteLine();
-                            correctUserInput = true;
+                            if (routinesExist == true)
+                            {
+                                goToMenu = "EditRoutine";
+                                Console.WriteLine();
+                                correctUserInput = true;
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid choice");
+                            }
                             break;
+
                         case "R":
                             goToMenu = "CreateRoutine";
                             Console.WriteLine();
@@ -273,8 +317,11 @@ public partial class Mode
                 Console.WriteLine("---------");
                 Console.WriteLine();
 
-                if (routineLoaded) Console.WriteLine("Loaded Default Routine - " + defaultRoutine);
-                Console.WriteLine();
+                if (routineLoaded)
+                {
+                    Console.WriteLine("Loaded Default Routine - " + defaultRoutine);
+                    Console.WriteLine();
+                }
 
                 if (routineLoaded)
                 {
@@ -282,18 +329,24 @@ public partial class Mode
                     {
                         Console.WriteLine("Q - start the default daily routine");
                         if (dailySecondaryAvailable)
+                        {
                             Console.WriteLine("A - resume the previous daily routine");
+                        }
                     }
                     else
                     {
                         if (lastSessionPresent)
+                        {
                             Console.WriteLine("Q - resume the default cycle routine");
+                        }
                         Console.WriteLine("A - start the default cycle routine from it's starting point");
                     }
                 }
-
-                Console.WriteLine("W - select the default startup routine.");
-                Console.WriteLine("E - edit an existing routine");
+                if (routinesExist)
+                {
+                    Console.WriteLine("W - select the default startup routine.");
+                    Console.WriteLine("E - edit an existing routine");
+                }
                 Console.WriteLine("R - create a new routine");
                 Console.WriteLine("T - exit");
 

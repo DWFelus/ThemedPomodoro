@@ -4,8 +4,12 @@
     {
         public static void RunRoutine(string m, string d, bool t, int s)
         {
+            NotifyIcon tray = new NotifyIcon();
+            tray.Visible = true;
+            tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
+
             int tick = 1000; // default: 1000
-            int divider = 300; // default: 1, speed up = 200;
+            int divider = 1; // default: 1, speed up = 200;
             Console.Clear();
 
             //Input from Program.cs
@@ -16,11 +20,11 @@
 
             //Pathing
 
-            string rootFolder = rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
+            string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
             string rPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine;
 
             string rConfigPath = rPath + "_config.txt";
-            string rLastSessionPath = rPath + "_LastSession.txt";
+            string rLastSessionPath = rPath + "_lastSession.txt";
             string rOrderPath = rPath + "_routine.txt";
             string rThemesPath = rPath + "_userThemes.txt";
             string rBeginAtPath = rPath + "_beginAt.txt";
@@ -58,8 +62,12 @@
             DisplayInitialMessage();
             LoadRoutineToRun();
 
+            Console.WriteLine();
             Console.WriteLine("Press any key to run the routine");
             Console.ReadKey(); // pause here before coming back
+            Console.Clear();
+            Console.WriteLine("Running the routine...");
+            Console.WindowHeight = 5;
 
             Run();
             RunComplete();
@@ -70,6 +78,8 @@
 
             void RunComplete()
             {
+                tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
+                Console.Beep(2000, 1000);
                 if (File.Exists(rBeginAtPath)) File.Delete(rBeginAtPath);
                 if (routineTypeDaily)
                 {
@@ -77,6 +87,7 @@
                 }
                 Console.WriteLine("Press a key to return to the main menu.");
                 Console.ReadKey();
+                tray.Dispose();
             }
 
             //
@@ -145,6 +156,7 @@
 
             void Run()
             {
+
                 for (int i = beginAt; i < routineOrder.Count; i++)
                 {
                     if (sessionCounter > (sets * sessions))
@@ -179,28 +191,41 @@
                     }
                     SaveBeginPoint();
                 }
+
             }
 
             void Session(string session)
             {
                 sessionType = session;
+                bool firstTick = true;
                 ticksCount = 0;
                 if (sessionType == "--FOCUS")
                 {
                     ticksCount = focusLength;
+                    tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red.ico");
+                    Console.Beep(700, 1000);
                 }
                 else if (sessionType == "--SHORT")
                 {
+                    tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green.ico");
                     ticksCount = shortBreakLength;
+                    Console.Beep(1500, 1000);
                 }
                 else
                 {
                     ticksCount = longBreakLength;
+                    tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue.ico");
+                    Console.Beep(2000, 1000);
                 }
                 // full session cycle below
                 for (double i = ticksCount; i >= 0; i--)
                 {
                     Tick(i, tick);
+                    if (!firstTick && i % 60 == 0 && sessionType == "--FOCUS" && i > 60)
+                    {
+                        Console.Beep(500, 100);
+                    }
+                    firstTick = false;
                 }
             }
 
@@ -232,20 +257,29 @@
                 var vis = VisualiseProgressBar(timeLeft);
                 if (sessionType == "--FOCUS")
                 {
-                    Console.Write(routineThemes[currentThemeIndex] + " - ");
-                    Console.Write(vis + " - " + time.ToString("mm':'ss") + " - ");
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+                    Console.Write(routineThemes[currentThemeIndex]);
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write(" - " + vis + " - " + time.ToString("mm':'ss") + " - ");
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("Focus Session " + (sessionCounter) + "/" + (sets * sessions));
+                    Console.BackgroundColor = ConsoleColor.Black;
                 }
 
                 else if (sessionType == "--SHORT")
                 {
-
-                    Console.WriteLine("BREAK Session - " + vis + time.ToString("mm':'ss"));
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                    Console.Write("SHORT BREAK Session");
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.WriteLine(" - " + vis + time.ToString("mm':'ss"));
                 }
 
                 else
                 {
-                    Console.WriteLine("LONG BREAK Session - " + vis + time.ToString("mm':'ss"));
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    Console.Write("LONG BREAK Session");
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.WriteLine(" - " + vis + time.ToString("mm':'ss"));
                 }
 
                 System.Threading.Thread.Sleep(tickTock);
@@ -260,7 +294,7 @@
                 double timeDiffrence = (ticksCount - timeLeft) * 100;
                 double timeProgress = (timeDiffrence / ticksCount) / 100;
                 string progressBar = "";
-                int progressBarSize = 50;
+                int progressBarSize = 20;
                 double meter = timeProgress * progressBarSize;
 
                 for (int i = 1; i < meter; i++)
@@ -286,9 +320,9 @@
                 Console.WriteLine("Routine Mode: " + routineType);
                 Console.WriteLine("Numer of sets: " + sets);
                 Console.WriteLine("Numer of focus sessions: " + sessions);
-                Console.WriteLine("Focus session length: " + focusLength / 60);
-                Console.WriteLine("Short break length: " + shortBreakLength / 60);
-                Console.WriteLine("Long break length: " + longBreakLength / 60);
+                Console.WriteLine("Focus session length: " + focusLength / 60 + " min.");
+                Console.WriteLine("Short break length: " + shortBreakLength / 60 + " min.");
+                Console.WriteLine("Long break length: " + longBreakLength / 60 + " min.");
                 Console.WriteLine();
                 Console.WriteLine("Routine Set Preview:");
                 Console.WriteLine("---");

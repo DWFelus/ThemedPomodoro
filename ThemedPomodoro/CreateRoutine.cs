@@ -74,8 +74,9 @@ namespace ThemedPomodoro
 
             void InputSessionLength()
             {
+                Console.Clear();
                 Console.WriteLine("---");
-                Console.WriteLine("Enter the length of a focus session in minutes, ranging from {0} to {1}:", timeMin, timeMax);
+                Console.WriteLine("Enter the length of a FOCUS session in minutes, ranging from {0} to {1}:", timeMin, timeMax);
                 sessionLength = validateNumericInput(timeMin, timeMax);
                 Console.WriteLine("Session length is {0} minutes.", sessionLength);
                 Console.WriteLine("---");
@@ -84,8 +85,9 @@ namespace ThemedPomodoro
 
             void InputShortBreakLength()
             {
+                Console.Clear();
                 Console.WriteLine("---");
-                Console.WriteLine("Enter the length of a short break in minutes, ranging from ranging from {0} to {1}:", timeMin, timeMax);
+                Console.WriteLine("Enter the length of a SHORT BREAK in minutes, ranging from ranging from {0} to {1}:", timeMin, timeMax);
                 shortBreakLength = validateNumericInput(timeMin, timeMax);
                 Console.WriteLine("Short break length is {0} minutes.", shortBreakLength);
                 Console.WriteLine("---");
@@ -94,8 +96,9 @@ namespace ThemedPomodoro
 
             void InputLongBreakLength()
             {
+                Console.Clear();
                 Console.WriteLine("---");
-                Console.WriteLine("Enter the length of a long break in minutes, ranging from {0} to {1}:", timeMin, timeMax);
+                Console.WriteLine("Enter the length of a LONG BREAK in minutes, ranging from {0} to {1}:", timeMin, timeMax);
                 longBreakLength = validateNumericInput(timeMin, timeMax);
                 Console.WriteLine("Long break length is {0} minutes.", longBreakLength);
                 Console.WriteLine("---");
@@ -104,8 +107,9 @@ namespace ThemedPomodoro
 
             void InputSessionAmount()
             {
+                Console.Clear();
                 Console.WriteLine("---");
-                Console.WriteLine("Enter the amount of sessions within a single set (sets are separated by long breaks), ranging from {0} to {1}:", amountMin, amountMax);
+                Console.WriteLine("Enter the AMOUNT OF SESSIONS within a single set (sets are separated by long breaks), ranging from {0} to {1}:", amountMin, amountMax);
                 sessionsCount = validateNumericInput(amountMin, amountMax);
                 Console.WriteLine("There will be {0} sessions within a single set.", sessionsCount);
                 Console.WriteLine("---");
@@ -114,8 +118,9 @@ namespace ThemedPomodoro
 
             void InputSetsAmount()
             {
+                Console.Clear();
                 Console.WriteLine("---");
-                Console.WriteLine("Enter the amount of sets (sets are separated by long breaks), ranging from {0} to {1}:", amountMin, amountMax);
+                Console.WriteLine("Enter the AMOUNT OF SETS (sets are separated by long breaks), ranging from {0} to {1}:", amountMin, amountMax);
                 setsCount = validateNumericInput(amountMin, amountMax);
                 Console.WriteLine("There will be {0} sets.", setsCount);
                 Console.WriteLine("---");
@@ -540,9 +545,9 @@ namespace ThemedPomodoro
             void DisplayModesMessage()
             {
                 Console.Clear();
-                Console.WriteLine("Choose mode a mode for this routine.");
+                Console.WriteLine("Choose a mode for this routine.");
                 Console.WriteLine("---");
-                Console.WriteLine("Daily mode is great when you have a set, strict daily routine and you spend your days in similar ways.");
+                Console.WriteLine("Daily mode is great when you have a set, strict daily routine and you spend your day in similar ways.");
                 Console.WriteLine("It's a great option when you want to spend a set amount of time on limited number of activities.");
                 Console.WriteLine("By choosing daily mode you're limited to entering fixed amount of themes for the sessions, so your days will have a set routine.");
                 Console.WriteLine("Themed Pomodoro will remind you what you are supposed to be doing at this time.");
@@ -552,7 +557,7 @@ namespace ThemedPomodoro
                 Console.WriteLine("Choosing cycle mode will let you enter infinite amount of themes for your sessions. All within a reason.");
                 Console.WriteLine("Themed Pomodoro will help you to retain knowledge and skills through systematic repetition.");
                 Console.WriteLine();
-                Console.WriteLine("Pomodoro Classic mode works as in the original pomodoro technique, focus sessions have no theme to it.");
+                Console.WriteLine("Pomodoro Classic mode works as in the original pomodoro technique, focus sessions have the same name.");
                 Console.WriteLine("---");
                 Console.WriteLine();
             }
@@ -562,13 +567,13 @@ namespace ThemedPomodoro
                 Console.Clear();
                 Console.WriteLine("Number of sets: " + setsCount);
                 Console.WriteLine("Number of sessions within a set: " + sessionsCount);
-                Console.WriteLine("Length of focus session: " + sessionLength + " minutes.");
+                Console.WriteLine("Length of focus session: " + sessionLength + " min.");
                 Console.WriteLine("Total number of focus sessions: " + (setsCount * sessionsCount));
-                Console.WriteLine("Estimated time spent in focus mode: {0}h {1}min", (focusRoutineMinutes / 60), (focusRoutineMinutes % 60));
-                Console.WriteLine("Estimated time spent on a break: {0}h {1}min", ((shortBreaksRoutineMinutes + longBreaksRoutineMinutes) / 60),
+                Console.WriteLine("Estimated time spent in focus mode: {0}h {1} min.", (focusRoutineMinutes / 60), (focusRoutineMinutes % 60));
+                Console.WriteLine("Estimated time spent on a break: {0}h {1} min.", ((shortBreaksRoutineMinutes + longBreaksRoutineMinutes) / 60),
                                                                                       ((shortBreaksRoutineMinutes + longBreaksRoutineMinutes) % 60)); Console.WriteLine();
                 Console.WriteLine("---");
-                Console.WriteLine("Your routine will take {0}h {1}min to complete.", routineHours, routineLeftoverMinutes);
+                Console.WriteLine("Your routine will take {0}h {1} min. to complete.", routineHours, routineLeftoverMinutes);
                 Console.WriteLine("Average focus percentage: {0}%.", Convert.ToInt32(ratio));
                 Console.WriteLine();
             }

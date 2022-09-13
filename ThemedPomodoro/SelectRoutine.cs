@@ -8,6 +8,8 @@ namespace ThemedPomodoro
         {
             Console.Clear();
             string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
+            List<string> dirNames = new();
+            string[] directories = Directory.GetDirectories(rootFolder);
 
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Select the Default Routine");
@@ -16,6 +18,7 @@ namespace ThemedPomodoro
             Console.WriteLine("Here is where you can select which routine is going to be loaded to start by default.");
             Console.WriteLine("Enter the name of the routine created previously.");
 
+            DisplayDirectories();
             LoadRoutine();
 
             void LoadRoutine()
@@ -59,6 +62,7 @@ namespace ThemedPomodoro
 
                 } while (inputTestPass == false);
             }
+
             void LoadAsDefaultRoutine(string input)
             {
                 File.Delete(rootFolder + "config.txt");
@@ -66,7 +70,17 @@ namespace ThemedPomodoro
                 tw.WriteLine(input);
                 tw.Close();
             }
+
+            void DisplayDirectories()
+            {
+                int count = 0;
+                foreach (string directory in directories)
+                {
+                    dirNames.Add(directory.Remove(0, (directory.LastIndexOf('\\')) + 1));
+                    Console.WriteLine((count + 1) + ": " + dirNames[count]);
+                    count++;
+                }
+            }
         }
     }
-
 }

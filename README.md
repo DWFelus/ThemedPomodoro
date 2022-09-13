@@ -76,13 +76,15 @@ v0.4 - Run Default Routine
 - [x] Track current progress and save it into the routine file
 - [x] *Run Default Routine* **COMPLETE**
 
-v1.0 - Edit and Save Routine
+v0.9 - Edit and Save Routine
 
-- [ ] Load the routine that the user has typed in
-- [ ] Preview it
-- [ ] Ask if the user wants to edit a segment
-- [ ] If the user wants to change the type to cycle or daily mode, warn that the session themes will be lost
-- [ ] Go back to the main menu  
+- [x] Load the routine that the user has typed in
+- [x] Go back to the main menu
+- [x] Play a sound when in a new session
+
+v1.0 - Stable
+- [ ] Tested
+- [ ] Build
 
 **Update To-Do List:**
 
