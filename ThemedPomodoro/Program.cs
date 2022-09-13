@@ -3,9 +3,11 @@ public partial class Mode
 {
     public static void Main()
     {
+        TestBox();
         MainMenu();
         static void MainMenu()
         {
+
             string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
             bool rootExists = false;
             string defaultRoutine = "";
@@ -14,9 +16,42 @@ public partial class Mode
             bool routineLoaded = false;
             bool routineTypeDaily = false;
             string validMainMenuUserChoice;
+            bool lastSessionPresent = false;
+
+            bool dailySecondaryAvailable = false;
+            bool cycleSecondaryAvailable = false;
 
             Config();
-            void Config()
+
+            Console.Clear();
+
+            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Themed Pomodoro");
+            Console.WriteLine("---------------");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine();
+
+            DisplayMainMenuChoices(); // displaying the options to the user depending on the loaded routine
+            validMainMenuUserChoice = MainMenuUserInput(); // getting input from the user
+            GoToMenu(validMainMenuUserChoice); // going into sub menus
+
+            // ---------------------------------------------------------------------------------------------------------
+            // ----------------------------------------------- FUNCTIONS -----------------------------------------------
+            // ---------------------------------------------------------------------------------------------------------
+
+            //
+            // Setup
+            //
+
+            void Config() // Config Hub
+            {
+                CheckForRootFolder();
+                GenerateEmptyConfigFile();   //... if there is none.
+                LoadConfigFile();
+                CheckForSecondaryAvailibilty();
+            }
+
+            void CheckForRootFolder()
             {
                 if (!Directory.Exists(rootFolder))
                 {
@@ -28,20 +63,18 @@ public partial class Mode
                 {
                     rootExists = true;
                 }
-
-                if (rootExists && !File.Exists(rootFolder + "config.txt"))
-                {
-                    GenerateEmptyConfigFile();
-                }
-
-                LoadConfigFile();
             }
+
             void GenerateEmptyConfigFile()
             {
-                TextWriter tw = new StreamWriter(rootFolder + "config.txt");
-                tw.WriteLine("");
-                tw.Close();
+                if (rootExists && !File.Exists(rootFolder + "config.txt"))
+                {
+                    TextWriter tw = new StreamWriter(rootFolder + "config.txt");
+                    tw.WriteLine("");
+                    tw.Close();
+                }
             }
+
             void LoadConfigFile()
             {
                 TextReader tr = new StreamReader(rootFolder + "config.txt");
@@ -50,11 +83,8 @@ public partial class Mode
                 Console.WriteLine("defaultRoutine: " + defaultRoutine); //debug
                 if (!string.IsNullOrEmpty(defaultRoutine))
                 {
-                    TextReader tr1 = new StreamReader(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt");
-                    lastSession = tr1.ReadLine();
                     routineLoaded = true;
-                    tr1.Close();
-
+                    CheckForLastSesion();
                     if (File.ReadLines(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt").ElementAtOrDefault(1) == "daily")
                     {
                         routineTypeDaily = true;
@@ -74,28 +104,67 @@ public partial class Mode
                 Console.WriteLine("lastSession: " + lastSession); //debug
             }
 
-            Console.Clear();
+            void CheckForLastSesion()
+            {
+                var rLastSessionPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt";
+                if (File.Exists(rLastSessionPath))
+                {
+                    TextReader tr1 = new StreamReader(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt");
+                    lastSession = tr1.ReadLine();
+                    tr1.Close();
+                    lastSessionPresent = true;
+                }
 
-            Console.BackgroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("Themed Pomodoro");
-            Console.WriteLine("---------------");
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.WriteLine();
+                else
+                {
+                    lastSession = "0";
+                    lastSessionPresent = false;
+                }
 
-            DisplayMainMenuChoices(); // displaying the options to the user depending on the loaded routine
-            validMainMenuUserChoice = MainMenuUserInput(); // getting input from the user
-            GoToMenu(validMainMenuUserChoice); // going into sub menus
+            }
+
+            void CheckForSecondaryAvailibilty()
+            {
+                string rLastSessionPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt";
+                string rBeginAtPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_beginAt.txt";
+                if (routineLoaded && !routineTypeDaily)
+                {
+                    if (!File.Exists(rLastSessionPath))
+                    {
+
+                        cycleSecondaryAvailable = true;
+                    }
+
+                }
+
+                if (routineLoaded && routineTypeDaily)
+                {
+                    if (!File.Exists(rBeginAtPath))
+                    {
+                        dailySecondaryAvailable = false;
+                    }
+                    else
+                    {
+                        dailySecondaryAvailable = true;
+                    }
+                }
+
+            }
+
+            //
+            // Menu
+            //
 
             void GoToMenu(string vMainMenuUserChoice)
             {
                 switch (vMainMenuUserChoice)
                 {
                     case "RunRoutinePrimary":
-                        RunRoutine("primary");
+                        RunRoutine("primary", defaultRoutine, routineTypeDaily, int.Parse(lastSession));
                         MainMenu();
                         break;
                     case "RunRoutineSecondary":
-                        RunRoutine("secondary");
+                        RunRoutine("secondary", defaultRoutine, routineTypeDaily, int.Parse(lastSession));
                         MainMenu();
                         break;
                     case "SelectRoutine":
@@ -112,6 +181,7 @@ public partial class Mode
                         break;
                 }
             }
+
             string MainMenuUserInput()
             {
                 bool correctUserInput = false;
@@ -127,12 +197,18 @@ public partial class Mode
                     switch (mainMenuUserInput)
                     {
                         case "Q":
-                            if (routineLoaded == true)
+                            if (!lastSessionPresent && !routineTypeDaily)
+                            {
+                                Console.WriteLine("Invalid choice");
+                            }
+
+                            else if (routineLoaded == true)
                             {
                                 correctUserInput = true;
                                 goToMenu = "RunRoutinePrimary";
                                 Console.WriteLine();
                             }
+
                             else
                             {
                                 Console.WriteLine("Invalid choice");
@@ -146,6 +222,16 @@ public partial class Mode
                                 goToMenu = "RunRoutineSecondary";
                                 Console.WriteLine();
                             }
+                            else if (routineLoaded == true && routineTypeDaily && dailySecondaryAvailable == false)
+                            {
+                                Console.WriteLine("Invalid choice");
+                            }
+
+                            else if (routineLoaded == true && !routineTypeDaily && cycleSecondaryAvailable == false)
+                            {
+                                Console.WriteLine("Invalid choice");
+                            }
+
                             else
                             {
                                 Console.WriteLine("Invalid choice");
@@ -180,6 +266,7 @@ public partial class Mode
                 }
                 return goToMenu;
             }
+
             void DisplayMainMenuChoices()
             {
                 Console.WriteLine("Main Menu");
@@ -194,11 +281,13 @@ public partial class Mode
                     if (routineTypeDaily)
                     {
                         Console.WriteLine("Q - start the default daily routine");
-                        Console.WriteLine("A - resume the previous daily routine");
+                        if (dailySecondaryAvailable)
+                            Console.WriteLine("A - resume the previous daily routine");
                     }
                     else
                     {
-                        Console.WriteLine("Q - resume the default cycle routine");
+                        if (lastSessionPresent)
+                            Console.WriteLine("Q - resume the default cycle routine");
                         Console.WriteLine("A - start the default cycle routine from it's starting point");
                     }
                 }
@@ -210,6 +299,7 @@ public partial class Mode
 
                 Console.WriteLine();
             }
+
             void Exit()
             {
                 Console.WriteLine();

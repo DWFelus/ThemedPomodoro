@@ -38,23 +38,23 @@ namespace ThemedPomodoro
             int amountMin = 1;
             int amountMax = 15;
 
+            // Data containers
+            List<string> cycleThemes = new();
+            List<string> userThemes = new();
+            List<string> generatedRoutine = new();
+
             // CreateRoutine Start
 
             InitialMessage();
             DefineRoutine();
-
-            string[] dailyThemes = new string[sessionsCount * setsCount];
-            List<string> cycleThemes = new();
-
+            string[] dailyThemes = new string[sessionsCount * setsCount]; // only after variables are defined
             SelectMode();
-
-            List<string> userThemes = new();
-
             ProcessThemes();
-
-            List<string> generatedRoutine = new();
-
             ExportRoutine();
+
+            // ---------------------------------------------------------------------------------------------------------
+            // ----------------------------------------------- FUNCTIONS -----------------------------------------------
+            // ---------------------------------------------------------------------------------------------------------
 
             //
             // Session parameter input, validation, calculation and modification
@@ -483,6 +483,8 @@ namespace ThemedPomodoro
                 routine.Add(sessionLength.ToString());
                 routine.Add(shortBreakLength.ToString());
                 routine.Add(longBreakLength.ToString());
+                routine.Add(setsCount.ToString());
+                routine.Add(sessionsCount.ToString());
 
                 string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
                     + @"\ThemedPomodoro\" + routineName + @"\";
@@ -508,9 +510,9 @@ namespace ThemedPomodoro
                 }
                 tw3.Close();
 
-                TextWriter tw4 = new StreamWriter(filePath + routineName + "_lastSession.txt");
+                /*TextWriter tw4 = new StreamWriter(filePath + routineName + "_lastSession.txt");
                 tw4.WriteLine("0");
-                tw4.Close();
+                tw4.Close();*/
             }
 
             //

@@ -68,12 +68,13 @@ v0.3.1
   
 v0.4 - Run Default Routine
 
-- [ ] Prompt there’s no routine selected as default
-- [ ] Display the complete routine
-- [ ] When in daily mode, ask to resume the previous routine from a session or to start a new one
-- [ ] When in cycle mode, ask to resume the previous cycle or to start a new one
-- [ ] Track current progress and save it into the routine file
-- [ ] Design basic count-down function  
+- [x] Prompt there’s no routine selected as default
+- [x] Display the complete routine
+- [x] When in daily mode, ask to resume the previous routine from a session or to start a new one
+- [x] When in cycle mode, ask to resume the previous cycle or to start a new one
+- [x] Design basic count-down function  
+- [x] Track current progress and save it into the routine file
+- [x] *Run Default Routine* **COMPLETE**
 
 v1.0 - Edit and Save Routine
 
