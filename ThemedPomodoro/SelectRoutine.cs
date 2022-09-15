@@ -7,9 +7,9 @@ namespace ThemedPomodoro
         public static void SelectRoutine()
         {
             Console.Clear();
-            string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
+            string configRootFolder = Environment.CurrentDirectory + @"\config\";
             List<string> dirNames = new();
-            string[] directories = Directory.GetDirectories(rootFolder);
+            string[] directories = Directory.GetDirectories(configRootFolder);
 
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Select the Default Routine");
@@ -46,7 +46,7 @@ namespace ThemedPomodoro
                         Console.Write("Name field cannot be empty and must contain at least one letter or number. Try again: ");
                     }
 
-                    else if (!Directory.Exists(rootFolder + input))
+                    else if (!Directory.Exists(configRootFolder + input))
                     {
                         Console.Write("No such routine. Try again: ");
                     }
@@ -65,8 +65,8 @@ namespace ThemedPomodoro
 
             void LoadAsDefaultRoutine(string input)
             {
-                File.Delete(rootFolder + "config.txt");
-                TextWriter tw = new StreamWriter(rootFolder + "config.txt");
+                File.Delete(configRootFolder + "config.txt");
+                TextWriter tw = new StreamWriter(configRootFolder + "config.txt");
                 tw.WriteLine(input);
                 tw.Close();
             }

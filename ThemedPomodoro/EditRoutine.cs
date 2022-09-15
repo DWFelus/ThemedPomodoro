@@ -6,10 +6,11 @@ namespace ThemedPomodoro
     {
         public static void EditRoutine()
         {
-            string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
+            Console.Clear();
+            string configRootFolder = Environment.CurrentDirectory + @"\config\";
             string routineToEdit = "";
             string routineToEditPath = "";
-            string[] directories = Directory.GetDirectories(rootFolder);
+            string[] directories = Directory.GetDirectories(configRootFolder);
 
             int timeMin = 1;
             int timeMax = 90;
@@ -18,19 +19,29 @@ namespace ThemedPomodoro
             int shortBreakLength = 0;
             int longBreakLength = 0;
 
+            bool edit = true;
+
             List<string> dirNames = new();
 
             DisplayInitialMessage();
             DisplayDirectories();
             LoadRoutine();
-            InputSessionLength();
-            InputShortBreakLength();
-            InputLongBreakLength();
-            MakeChanges();
+            if (edit)
+            {
+                InputSessionLength();
+                InputShortBreakLength();
+                InputLongBreakLength();
+                MakeChanges();
+                Console.WriteLine("Routine edited successfully. Press ENTER to return to the main menu.");
+            }
 
-            Console.Clear();
-            Console.WriteLine("Routine edited successfully. Press ENTER to return to the main menu.");
+            else
+            {
+                Console.WriteLine("Editing Canceled. Press ENTER to return to the main menu.");
+            }
             Console.ReadLine();
+            Console.Clear();
+
 
             // ---------------------------------------------------------------------------------------------------------
             // ----------------------------------------------- FUNCTIONS -----------------------------------------------
@@ -55,6 +66,7 @@ namespace ThemedPomodoro
                     if (input == "--")
                     {
                         inputTestPass = true;
+                        edit = false;
                     }
 
                     else if (input == null || !Regex.IsMatch(input, @"[a-zA-Z0-9]") || input == "")
@@ -62,7 +74,7 @@ namespace ThemedPomodoro
                         Console.Write("Name field cannot be empty and must contain at least one letter or number. Try again: ");
                     }
 
-                    else if (!Directory.Exists(rootFolder + input))
+                    else if (!Directory.Exists(configRootFolder + input))
                     {
                         Console.Write("No such routine. Try again: ");
                     }
@@ -71,7 +83,7 @@ namespace ThemedPomodoro
                     {
                         Console.WriteLine("Routine loaded: " + input);
                         routineToEdit = input;
-                        routineToEditPath += rootFolder + routineToEdit + @"\";
+                        routineToEditPath += configRootFolder + routineToEdit + @"\";
                         inputTestPass = true;
                     }
 
@@ -181,9 +193,9 @@ namespace ThemedPomodoro
                 Console.WriteLine("--------------");
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.WriteLine("Here is where you can edit a part of an existing routine.");
-                Console.WriteLine("If you wish to edit themes, go to user documents\\ThemedPomodoro\\RoutineName");
+                Console.WriteLine("If you wish to edit themes, go to \\config folder");
                 Console.WriteLine("and edit \"RoutineName_userThemes.txt\" file");
-                Console.WriteLine("Below, make changes to Rourine's session lenght's.");
+                Console.WriteLine("Below, make changes to Routine's session lenght's.");
                 Console.WriteLine();
             }
         }

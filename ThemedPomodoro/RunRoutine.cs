@@ -9,7 +9,7 @@
             tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
 
             int tick = 1000; // default: 1000
-            int divider = 1; // default: 1, speed up = 200;
+            int divider = 1; // default: 1, speed up = 300;
             Console.Clear();
 
             //Input from Program.cs
@@ -20,8 +20,8 @@
 
             //Pathing
 
-            string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
-            string rPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine;
+            string configRootFolder = Environment.CurrentDirectory + @"\config\";
+            string rPath = configRootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine;
 
             string rConfigPath = rPath + "_config.txt";
             string rLastSessionPath = rPath + "_lastSession.txt";
@@ -58,17 +58,10 @@
             int beginAt = 0;
             int beginIndex = 0;
             int beginThemeIndex = 0;
+            var firstMessage = true;
 
             DisplayInitialMessage();
             LoadRoutineToRun();
-
-            Console.WriteLine();
-            Console.WriteLine("Press any key to run the routine");
-            Console.ReadKey(); // pause here before coming back
-            Console.Clear();
-            Console.WriteLine("Running the routine...");
-            Console.WindowHeight = 5;
-
             Run();
             RunComplete();
 
@@ -76,19 +69,7 @@
             // ----------------------------------------------- FUNCTIONS -----------------------------------------------
             // ---------------------------------------------------------------------------------------------------------
 
-            void RunComplete()
-            {
-                tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
-                Console.Beep(2000, 1000);
-                if (File.Exists(rBeginAtPath)) File.Delete(rBeginAtPath);
-                if (routineTypeDaily)
-                {
-                    if (File.Exists(rLastSessionPath)) File.Delete(rLastSessionPath);
-                }
-                Console.WriteLine("Press a key to return to the main menu.");
-                Console.ReadKey();
-                tray.Dispose();
-            }
+
 
             //
             // Loading Routine
@@ -132,21 +113,43 @@
 
                 if (rType == "Daily" && rMode == "secondary")
                 {
-                    if (File.Exists(rBeginAtPath))
+                    ResumeInterrupted("secondary");
+                }
+
+                if (rType == "Cycle" && rMode == "teriary")
+                {
+                    ResumeInterrupted("teriary");
+                }
+            }
+
+            void ResumeInterrupted(string s)
+            {
+                if (File.Exists(rBeginAtPath))
+                {
+                    if (s != null)
                     {
                         beginAt = int.Parse(File.ReadLines(rBeginAtPath).ElementAtOrDefault(0)) + 1;
                         currentThemeIndex = int.Parse(File.ReadLines(rBeginAtPath).ElementAtOrDefault(1));
-                        sessionCounter = currentThemeIndex + 1;
-                        if (routineOrder[beginAt] == "--SHORT" || routineOrder[beginAt] == "--LONG")
+                        sessionCounter = currentThemeIndex + 1; //
+                        if (sessionCounter > sessions * sets)
                         {
-                            beginAt++;
+                            sessionCounter = 1;
+                        } //
+                        if (beginAt < routineOrder.Count)
+                        {
+                            if (routineOrder[beginAt] == "--SHORT" || routineOrder[beginAt] == "--LONG")
+                            {
+                                beginAt++;
+                            }
                         }
-                        if (beginAt > routineOrder.Count)
+
+                        if (beginAt >= routineOrder.Count)
                         {
                             beginAt = 0;
                             sessionCounter = 1;
                         }
                     }
+
                 }
             }
 
@@ -172,6 +175,20 @@
                         {
                             currentThemeIndex = 0;
                             beginIndex = 0;
+                        }
+                        if (firstMessage)
+                        {
+                            Console.WriteLine();
+                            Console.Write("Next session: ");
+                            Console.BackgroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine(routineThemes[currentThemeIndex]);
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.WriteLine("Press any key to run the routine...");
+                            Console.ReadKey(); // pause here before coming back
+                            Console.Clear();
+                            Console.WriteLine("Running the routine...");
+                            Console.WindowHeight = 5;
+                            firstMessage = false;
                         }
                         Session("--FOCUS");
                         currentThemeIndex++;
@@ -252,37 +269,113 @@
 
             void Tick(double timeLeft, int tickTock)
             {
+
                 Console.Clear();
                 var time = TimeSpan.FromSeconds((long)timeLeft);
                 var vis = VisualiseProgressBar(timeLeft);
                 if (sessionType == "--FOCUS")
                 {
                     Console.BackgroundColor = ConsoleColor.DarkRed;
-                    Console.Write(routineThemes[currentThemeIndex]);
+                    var a = routineThemes[currentThemeIndex];
+                    Console.Write(a);
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.Write(" - " + vis + " - " + time.ToString("mm':'ss") + " - ");
+
+                    var b = " - " + vis + " - " + time.ToString("mm':'ss") + " - ";
+                    Console.Write(b);
                     Console.BackgroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("Focus Session " + (sessionCounter) + "/" + (sets * sessions));
+
+                    var c = "Focus Session " + (sessionCounter) + "/" + (sets * sessions);
+                    Console.Write(c);
                     Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write(" ");
+
+                    DisplayTotalProgress();
+                    DisplayNextSession();
+
                 }
 
                 else if (sessionType == "--SHORT")
                 {
+                    var a = "SHORT BREAK Session";
                     Console.BackgroundColor = ConsoleColor.DarkGreen;
-                    Console.Write("SHORT BREAK Session");
+                    Console.Write(a);
+
+                    var b = " - " + vis + time.ToString("mm':'ss");
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.WriteLine(" - " + vis + time.ToString("mm':'ss"));
+                    Console.Write(b);
+                    Console.Write(" ");
+
+                    DisplayTotalProgress();
+                    DisplayNextSession();
                 }
 
                 else
                 {
+                    var a = "LONG BREAK Session";
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
-                    Console.Write("LONG BREAK Session");
+                    Console.Write(a);
+
+                    var b = " - " + vis + time.ToString("mm':'ss");
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.WriteLine(" - " + vis + time.ToString("mm':'ss"));
+                    Console.Write(b);
+                    Console.Write(" ");
+
+                    DisplayTotalProgress();
+                    DisplayNextSession();
                 }
 
                 System.Threading.Thread.Sleep(tickTock);
+            }
+
+            void DisplayTotalProgress()
+            {
+                Console.WriteLine(" - Total Progress: {0}/{1}", beginIndex + 1, routineOrder.Count);
+            }
+
+            void DisplayNextSession()
+            {
+                if (beginIndex + 1 < routineOrder.Count)
+                {
+                    Console.Write("                                                       ");
+                    Console.Write("//Next Session: ");
+
+                    if (routineOrder[beginIndex + 1] == "--FOCUS")
+                    {
+                        if (sessionCounter - sets * sessions != 0 && currentThemeIndex + 1 < routineThemes.Count)
+                        {
+                            Console.WriteLine(routineThemes[currentThemeIndex]);
+                        }
+
+                        else
+                        {
+                            Console.WriteLine(routineThemes[0]);
+                        }
+
+                    }
+                    else if (routineOrder[beginIndex + 1] == "--SHORT")
+                    {
+                        Console.WriteLine("Short Break");
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Long Break");
+                    }
+                }
+            }
+
+            void RunComplete()
+            {
+                tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
+                Console.Beep(2000, 1000);
+                if (File.Exists(rBeginAtPath)) File.Delete(rBeginAtPath);
+                if (routineTypeDaily)
+                {
+                    if (File.Exists(rLastSessionPath)) File.Delete(rLastSessionPath);
+                }
+                Console.WriteLine("Press a key to return to the main menu.");
+                Console.ReadKey();
+                tray.Dispose();
             }
 
             //

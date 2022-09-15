@@ -491,8 +491,7 @@ namespace ThemedPomodoro
                 routine.Add(setsCount.ToString());
                 routine.Add(sessionsCount.ToString());
 
-                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                    + @"\ThemedPomodoro\" + routineName + @"\";
+                string filePath = Environment.CurrentDirectory + @"\config\" + routineName + @"\";
                 System.IO.Directory.CreateDirectory(filePath);
                 TextWriter tw = new StreamWriter(filePath + routineName + "_config.txt");
                 for (int i = 0; i < routine.Count; i++)
@@ -514,10 +513,6 @@ namespace ThemedPomodoro
                     tw3.WriteLine(generatedRoutine[i]);
                 }
                 tw3.Close();
-
-                /*TextWriter tw4 = new StreamWriter(filePath + routineName + "_lastSession.txt");
-                tw4.WriteLine("0");
-                tw4.Close();*/
             }
 
             //
@@ -549,7 +544,8 @@ namespace ThemedPomodoro
                 Console.WriteLine("---");
                 Console.WriteLine("Daily mode is great when you have a set, strict daily routine and you spend your day in similar ways.");
                 Console.WriteLine("It's a great option when you want to spend a set amount of time on limited number of activities.");
-                Console.WriteLine("By choosing daily mode you're limited to entering fixed amount of themes for the sessions, so your days will have a set routine.");
+                Console.WriteLine("By choosing daily mode you're limited to entering fixed amount of themes for the sessions,");
+                Console.WriteLine("so your days will have a set routine.");
                 Console.WriteLine("Themed Pomodoro will remind you what you are supposed to be doing at this time.");
                 Console.WriteLine();
                 Console.WriteLine("Cycle mode is useful when number of activities you want to keep tabs on exceed the number of sessions within a day.");

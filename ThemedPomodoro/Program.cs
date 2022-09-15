@@ -8,8 +8,9 @@ public partial class Mode
         static void MainMenu()
         {
             Console.WindowHeight = 40;
-            Console.WindowWidth = 90;
-            string rootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\ThemedPomodoro\";
+            Console.WindowWidth = 130;
+            string rootFolderPath = Environment.CurrentDirectory;
+            string configFolderPath = rootFolderPath + @"\config";
             bool rootExists = false;
             string defaultRoutine = "";
             string lastSession = "";
@@ -22,6 +23,7 @@ public partial class Mode
 
             bool dailySecondaryAvailable = false;
             bool cycleSecondaryAvailable = false;
+            bool cycleTeriaryAvailable = false;
 
             Config();
 
@@ -47,31 +49,18 @@ public partial class Mode
 
             void Config() // Config Hub
             {
-                CheckForRootFolder();
+                CheckForConfigFolder();
                 GenerateEmptyConfigFile();   //... if there is none.
                 LoadConfigFile();
                 CheckForSecondaryAvailibilty();
                 CheckForExistingRoutines();
             }
 
-            void CheckForExistingRoutines()
+            void CheckForConfigFolder()
             {
-                string[] directories = Directory.GetDirectories(rootFolder);
-                if (directories.Length == 0)
+                if (!Directory.Exists(configFolderPath))
                 {
-                    routinesExist = false;
-                }
-                else
-                {
-                    routinesExist = true;
-                }
-            }
-
-            void CheckForRootFolder()
-            {
-                if (!Directory.Exists(rootFolder))
-                {
-                    Directory.CreateDirectory(rootFolder);
+                    Directory.CreateDirectory(configFolderPath);
                     rootExists = true;
                 }
 
@@ -83,9 +72,9 @@ public partial class Mode
 
             void GenerateEmptyConfigFile()
             {
-                if (rootExists && !File.Exists(rootFolder + "config.txt"))
+                if (rootExists && !File.Exists(configFolderPath + @"\config.txt"))
                 {
-                    TextWriter tw = new StreamWriter(rootFolder + "config.txt");
+                    TextWriter tw = new StreamWriter(configFolderPath + @"\config.txt");
                     tw.WriteLine("");
                     tw.Close();
                 }
@@ -93,7 +82,7 @@ public partial class Mode
 
             void LoadConfigFile()
             {
-                TextReader tr = new StreamReader(rootFolder + "config.txt");
+                TextReader tr = new StreamReader(configFolderPath + @"\config.txt");
                 defaultRoutine = tr.ReadLine();
                 tr.Close();
                 Console.WriteLine("defaultRoutine: " + defaultRoutine); //debug
@@ -101,9 +90,9 @@ public partial class Mode
                 {
                     routineLoaded = true;
                     CheckForLastSesion();
-                    if (File.Exists(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt"))
+                    if (File.Exists(configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt"))
                     {
-                        if (File.ReadLines(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt").ElementAtOrDefault(1) == "daily")
+                        if (File.ReadLines(configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_config.txt").ElementAtOrDefault(1) == "daily")
                         {
                             routineTypeDaily = true;
                         }
@@ -130,10 +119,10 @@ public partial class Mode
 
             void CheckForLastSesion()
             {
-                var rLastSessionPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt";
+                var rLastSessionPath = configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt";
                 if (File.Exists(rLastSessionPath))
                 {
-                    TextReader tr1 = new StreamReader(rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt");
+                    TextReader tr1 = new StreamReader(configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt");
                     lastSession = tr1.ReadLine();
                     tr1.Close();
                     lastSessionPresent = true;
@@ -148,8 +137,8 @@ public partial class Mode
 
             void CheckForSecondaryAvailibilty()
             {
-                string rLastSessionPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt";
-                string rBeginAtPath = rootFolder + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_beginAt.txt";
+                string rLastSessionPath = configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt";
+                string rBeginAtPath = configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_beginAt.txt";
                 if (routineLoaded && !routineTypeDaily)
                 {
                     if (!File.Exists(rLastSessionPath))
@@ -173,6 +162,31 @@ public partial class Mode
                         dailySecondaryAvailable = true;
                     }
                 }
+
+                if (routineLoaded && !routineTypeDaily)
+                {
+                    if (File.Exists(rBeginAtPath))
+                    {
+                        cycleTeriaryAvailable = true;
+                    }
+                    else
+                    {
+                        cycleTeriaryAvailable = false;
+                    }
+                }
+            }
+
+            void CheckForExistingRoutines()
+            {
+                string[] directories = Directory.GetDirectories(configFolderPath);
+                if (directories.Length == 0)
+                {
+                    routinesExist = false;
+                }
+                else
+                {
+                    routinesExist = true;
+                }
             }
 
             //
@@ -189,6 +203,10 @@ public partial class Mode
                         break;
                     case "RunRoutineSecondary":
                         RunRoutine("secondary", defaultRoutine, routineTypeDaily, int.Parse(lastSession));
+                        MainMenu();
+                        break;
+                    case "CycleResume":
+                        RunRoutine("teriary", defaultRoutine, routineTypeDaily, int.Parse(lastSession));
                         MainMenu();
                         break;
                     case "SelectRoutine":
@@ -262,7 +280,19 @@ public partial class Mode
                             {
                                 Console.WriteLine("Invalid choice");
                             }
+                            break;
 
+                        case "Z":
+                            if (routineLoaded == true && !routineTypeDaily && cycleTeriaryAvailable)
+                            {
+                                correctUserInput = true;
+                                goToMenu = "CycleResume";
+                                Console.WriteLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid choice");
+                            }
                             break;
                         case "W":
                             if (routinesExist == true)
@@ -321,30 +351,35 @@ public partial class Mode
                 {
                     Console.WriteLine("Loaded Default Routine - " + defaultRoutine);
                     Console.WriteLine();
-                }
 
-                if (routineLoaded)
-                {
                     if (routineTypeDaily)
                     {
-                        Console.WriteLine("Q - start the default daily routine");
+                        Console.WriteLine("Q - start/restart the default daily routine");
                         if (dailySecondaryAvailable)
                         {
-                            Console.WriteLine("A - resume the previous daily routine");
+                            Console.WriteLine("A - resume the default interrupted daily routine");
                         }
                     }
                     else
                     {
                         if (lastSessionPresent)
                         {
-                            Console.WriteLine("Q - resume the default cycle routine");
+                            Console.WriteLine("Q - resume the default cycle routine from the first session");
                         }
-                        Console.WriteLine("A - start the default cycle routine from it's starting point");
+
+                        Console.WriteLine("A - start/restart the default, full cycle routine from it's first theme");
+
+                        if (cycleTeriaryAvailable)
+                        {
+                            Console.WriteLine("Z - resume the default interrupted cycle routine");
+                        }
                     }
+                    Console.WriteLine();
                 }
+
                 if (routinesExist)
                 {
-                    Console.WriteLine("W - select the default startup routine.");
+                    Console.WriteLine("W - select the default startup routine");
                     Console.WriteLine("E - edit an existing routine");
                 }
                 Console.WriteLine("R - create a new routine");

@@ -76,11 +76,16 @@ v0.4 - Run Default Routine
 - [x] Track current progress and save it into the routine file
 - [x] *Run Default Routine* **COMPLETE**
 
-v0.9 - Edit and Save Routine
+v0.9 - Edit and Save Routine - Working Beta
 
 - [x] Load the routine that the user has typed in
 - [x] Go back to the main menu
 - [x] Play a sound when in a new session
+
+v0.9.1 Working Beta
+- [x] Make the app portable (move config and profiles to .exe root folder)
+- [x] Add option to resume interrupted cycle with key "Z" (make use of beginAt variable)
+- [x] Preview next session
 
 v1.0 - Stable
 - [ ] Tested
