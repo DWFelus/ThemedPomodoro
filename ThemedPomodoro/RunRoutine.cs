@@ -9,7 +9,7 @@
             tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
 
             int tick = 1000; // default: 1000
-            int divider = 1; // default: 1, speed up = 300;
+            int divider = 300; // default: 1, speed up = 300;
             Console.Clear();
 
             //Input from Program.cs
@@ -402,7 +402,54 @@
                     progressBar += ".";
                 }
                 string res = progressBar + " " + ((int)(timeProgress * 100)) + "% ";
+                TaskbarIconProgress(timeProgress * 100);
                 return res;
+
+            }
+
+            void TaskbarIconProgress(double time)
+            {
+                if (sessionType == "--FOCUS")
+                {
+                    if (time > 10) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red90.ico");
+                    if (time > 20) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red80.ico");
+                    if (time > 30) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red70.ico");
+                    if (time > 40) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red60.ico");
+                    if (time > 50) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red50.ico");
+                    if (time > 60) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red40.ico");
+                    if (time > 70) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red30.ico");
+                    if (time > 80) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red20.ico");
+                    if (time > 90) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red10.ico");
+                    if (time > 95) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red05.ico");
+                }
+
+                else if (sessionType == "--SHORT")
+                {
+                    if (time > 10) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green90.ico");
+                    if (time > 20) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green80.ico");
+                    if (time > 30) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green70.ico");
+                    if (time > 40) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green60.ico");
+                    if (time > 50) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green50.ico");
+                    if (time > 60) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green40.ico");
+                    if (time > 70) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green30.ico");
+                    if (time > 80) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green20.ico");
+                    if (time > 90) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green10.ico");
+                    if (time > 95) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green05.ico");
+                }
+
+                else
+                {
+                    if (time > 10) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue90.ico");
+                    if (time > 20) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue80.ico");
+                    if (time > 30) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue70.ico");
+                    if (time > 40) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue60.ico");
+                    if (time > 50) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue50.ico");
+                    if (time > 60) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue40.ico");
+                    if (time > 70) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue30.ico");
+                    if (time > 80) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue20.ico");
+                    if (time > 90) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue10.ico");
+                    if (time > 95) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue05.ico");
+                }
             }
 
             void DisplayRoutineInfo()

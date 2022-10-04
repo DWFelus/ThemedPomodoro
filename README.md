@@ -87,6 +87,10 @@ v0.9.1 Working Beta
 - [x] Add option to resume interrupted cycle with key "Z" (make use of beginAt variable)
 - [x] Preview next session
 
+v.0.9.2 Working Beta
+- [x] Added taskbar tray icon progress.
+
+
 v1.0 - Stable
 - [ ] Tested
 - [ ] Build
