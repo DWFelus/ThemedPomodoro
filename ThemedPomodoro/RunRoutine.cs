@@ -9,7 +9,7 @@
             tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
 
             int tick = 1000; // default: 1000
-            int divider = 300; // default: 1, speed up = 300;
+            int divider = 1; // default: 1, speed up = 300;
             Console.Clear();
 
             //Input from Program.cs
