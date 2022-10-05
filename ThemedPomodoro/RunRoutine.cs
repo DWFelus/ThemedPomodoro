@@ -409,46 +409,28 @@
 
             void TaskbarIconProgress(double time)
             {
+                string iconColor = "";
+
                 if (sessionType == "--FOCUS")
                 {
-                    if (time > 10) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red90.ico");
-                    if (time > 20) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red80.ico");
-                    if (time > 30) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red70.ico");
-                    if (time > 40) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red60.ico");
-                    if (time > 50) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red50.ico");
-                    if (time > 60) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red40.ico");
-                    if (time > 70) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red30.ico");
-                    if (time > 80) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red20.ico");
-                    if (time > 90) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red10.ico");
-                    if (time > 95) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red05.ico");
+                    iconColor = "red";
                 }
 
                 else if (sessionType == "--SHORT")
                 {
-                    if (time > 10) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green90.ico");
-                    if (time > 20) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green80.ico");
-                    if (time > 30) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green70.ico");
-                    if (time > 40) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green60.ico");
-                    if (time > 50) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green50.ico");
-                    if (time > 60) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green40.ico");
-                    if (time > 70) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green30.ico");
-                    if (time > 80) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green20.ico");
-                    if (time > 90) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green10.ico");
-                    if (time > 95) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green05.ico");
+                    iconColor = "green";
                 }
 
                 else
                 {
-                    if (time > 10) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue90.ico");
-                    if (time > 20) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue80.ico");
-                    if (time > 30) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue70.ico");
-                    if (time > 40) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue60.ico");
-                    if (time > 50) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue50.ico");
-                    if (time > 60) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue40.ico");
-                    if (time > 70) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue30.ico");
-                    if (time > 80) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue20.ico");
-                    if (time > 90) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue10.ico");
-                    if (time > 95) tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue05.ico");
+                    iconColor = "blue";
+                }
+
+                double timeRounded = 100 - Math.Round(time / 10, MidpointRounding.AwayFromZero) * 10;
+
+                if (timeRounded != 100)
+                {
+                    tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\" + iconColor + timeRounded + ".ico");
                 }
             }
 
