@@ -54,10 +54,10 @@ namespace ThemedPomodoro
                     else
                     {
                         Console.WriteLine("Routine loaded: " + input);
-                        Console.WriteLine("Press ENTER to return to Main Menu.");
+                        Console.WriteLine("Press a key to return to Main Menu.");
                         LoadAsDefaultRoutine(input);
                         inputTestPass = true;
-                        Console.ReadLine();
+                        Console.ReadKey();
                     }
 
                 } while (inputTestPass == false);

@@ -32,14 +32,14 @@ namespace ThemedPomodoro
                 InputShortBreakLength();
                 InputLongBreakLength();
                 MakeChanges();
-                Console.WriteLine("Routine edited successfully. Press ENTER to return to the main menu.");
+                Console.WriteLine("Routine edited successfully. Press a key return to the main menu.");
             }
 
             else
             {
-                Console.WriteLine("Editing Canceled. Press ENTER to return to the main menu.");
+                Console.WriteLine("Editing Canceled. Press a key to return to the main menu.");
             }
-            Console.ReadLine();
+            Console.ReadKey();
             Console.Clear();
 
 

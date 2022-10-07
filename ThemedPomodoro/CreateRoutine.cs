@@ -528,13 +528,14 @@ namespace ThemedPomodoro
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.WriteLine("Here is where you are going to create your own routine to run from the main menu.");
                 Console.WriteLine("Carefully answer each query to create a schedule.");
-                Console.WriteLine();
 
                 Console.WriteLine();
                 Console.WriteLine("Session: a Pomodoro session followed by a short or a long break");
                 Console.WriteLine("Set: intended number of repetitions of the sessions ended by a long break");
                 Console.WriteLine("Routine: sets combined into one day worth of activities like work or learning");
                 Console.WriteLine();
+                Console.WriteLine("Press a key to continue.");
+                Console.ReadKey();
             }
 
             void DisplayModesMessage()

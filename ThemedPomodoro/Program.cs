@@ -394,8 +394,8 @@ public partial class Mode
                 Console.WriteLine(".");
                 Console.WriteLine(".");
                 Console.WriteLine(".");
-                Console.WriteLine("Press enter to exit");
-                Console.ReadLine();
+                Console.WriteLine("Press a key to exit");
+                Console.ReadKey();
                 Environment.Exit(0);
             }
         }

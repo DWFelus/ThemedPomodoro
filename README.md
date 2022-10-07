@@ -87,12 +87,22 @@ v0.9.1 Working Beta
 - [x] Add option to resume interrupted cycle with key "Z" (make use of beginAt variable)
 - [x] Preview next session
 
-v0.9.2 Working Beta
+v0.9.2 Working Beta - Testing
 - [x] Added taskbar tray icon progress.
 
-v0.9.2.1
+v0.9.2.1 Working Beta - Testing
 - [x] Efficient tray icon code.
 
+v0.9.2.2 Working Beta - Testing
+- [x] Resuming interrupted session at exact second the application has been closed.
+- [x] Fixed a bug where program skipped over initial message for the Create Routine mode.
+- [x] Pause on ReadKey instead of ReadLine.
+
+v0.9.2.3 Working Beta - Testing
+- [] Resume interrupted 1st session
+
+v0.9.2.3 Working Beta - Testing
+- [] Update tray icon only when reached a breakpoint, not every second.
 
 v1.0 - Stable
 - [ ] Tested
@@ -112,4 +122,4 @@ v2.0
 
 v2.1
 
-- [ ] add tracking stats for encouragement
+- [ ] Add tracking stats for encouragement

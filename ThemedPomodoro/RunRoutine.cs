@@ -9,7 +9,7 @@
             tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
 
             int tick = 1000; // default: 1000
-            int divider = 1; // default: 1, speed up = 300;
+            int divider = 4; // default: 1, speed up = 300;
             Console.Clear();
 
             //Input from Program.cs
@@ -28,6 +28,7 @@
             string rOrderPath = rPath + "_routine.txt";
             string rThemesPath = rPath + "_userThemes.txt";
             string rBeginAtPath = rPath + "_beginAt.txt";
+            string rLastTickPath = rPath + "_lastTick.txt";
 
             int sessionsCount = File.ReadAllLines(rOrderPath).Length;
             int themesCount = File.ReadAllLines(rThemesPath).Length;
@@ -57,8 +58,12 @@
             double ticksCount;
             int beginAt = 0;
             int beginIndex = 0;
-            int beginThemeIndex = 0;
+            //int beginThemeIndex = 0;
             var firstMessage = true;
+            bool resumingInterrupted = false;
+            double tickCounter = 0;
+            int savedRoutineOrder = 0;
+            bool checkForLastTickFile = false;
 
             DisplayInitialMessage();
             LoadRoutineToRun();
@@ -68,8 +73,6 @@
             // ---------------------------------------------------------------------------------------------------------
             // ----------------------------------------------- FUNCTIONS -----------------------------------------------
             // ---------------------------------------------------------------------------------------------------------
-
-
 
             //
             // Loading Routine
@@ -129,12 +132,16 @@
                     if (s != null)
                     {
                         beginAt = int.Parse(File.ReadLines(rBeginAtPath).ElementAtOrDefault(0)) + 1;
+                        savedRoutineOrder = beginAt - 1;
+
                         currentThemeIndex = int.Parse(File.ReadLines(rBeginAtPath).ElementAtOrDefault(1));
-                        sessionCounter = currentThemeIndex + 1; //
+                        sessionCounter = currentThemeIndex + 1;
+
                         if (sessionCounter > sessions * sets)
                         {
                             sessionCounter = 1;
-                        } //
+                        }
+
                         if (beginAt < routineOrder.Count)
                         {
                             if (routineOrder[beginAt] == "--SHORT" || routineOrder[beginAt] == "--LONG")
@@ -148,8 +155,8 @@
                             beginAt = 0;
                             sessionCounter = 1;
                         }
+                        resumingInterrupted = true;
                     }
-
                 }
             }
 
@@ -170,7 +177,6 @@
                     currentSession = routineOrder[i];
                     if (currentSession == "--FOCUS")
                     {
-
                         if (currentThemeIndex >= themesCount)
                         {
                             currentThemeIndex = 0;
@@ -183,12 +189,13 @@
                             Console.BackgroundColor = ConsoleColor.DarkRed;
                             Console.WriteLine(routineThemes[currentThemeIndex]);
                             Console.BackgroundColor = ConsoleColor.Black;
-                            Console.WriteLine("Press any key to run the routine...");
+                            Console.WriteLine("Press a key to run the routine...");
                             Console.ReadKey(); // pause here before coming back
                             Console.Clear();
                             Console.WriteLine("Running the routine...");
                             Console.WindowHeight = 5;
                             firstMessage = false;
+
                         }
                         Session("--FOCUS");
                         currentThemeIndex++;
@@ -221,28 +228,62 @@
                     ticksCount = focusLength;
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red.ico");
                     Console.Beep(700, 1000);
+                    if (resumingInterrupted == true && routineOrder[savedRoutineOrder] == "--FOCUS" && File.Exists(rLastTickPath)) //&& skippedBreak == false
+                    {
+                        ticksCount = double.Parse(File.ReadLines(rLastTickPath).ElementAtOrDefault(0));
+
+                    }
                 }
                 else if (sessionType == "--SHORT")
                 {
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\green.ico");
                     ticksCount = shortBreakLength;
                     Console.Beep(1500, 1000);
+                    checkForLastTickFile = true;
                 }
                 else
                 {
                     ticksCount = longBreakLength;
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\blue.ico");
                     Console.Beep(2000, 1000);
+                    checkForLastTickFile = true;
                 }
+
+                resumingInterrupted = false;
+
                 // full session cycle below
                 for (double i = ticksCount; i >= 0; i--)
                 {
+                    if (i < 5)
+                    {
+                        tickCounter = 5;
+                    }
+                    else
+                    {
+                        tickCounter = i;
+                    }
+
                     Tick(i, tick);
                     if (!firstTick && i % 60 == 0 && sessionType == "--FOCUS" && i > 60)
                     {
                         Console.Beep(500, 100);
                     }
                     firstTick = false;
+
+                    if (session == "--FOCUS")
+                    {
+                        SaveLastTick();
+                    }
+                    else
+                    {
+                        if (checkForLastTickFile)
+                            if (File.Exists(rLastTickPath))
+                            {
+                                File.Delete(rLastTickPath);
+                            }
+
+                        checkForLastTickFile = false;
+                    }
                 }
             }
 
@@ -252,6 +293,17 @@
                 TextWriter lastSessionWriter = new StreamWriter(rLastSessionPath);
                 lastSessionWriter.WriteLine(currentThemeIndex);
                 lastSessionWriter.Close();
+            }
+
+            void SaveLastTick()
+            {
+                if (File.Exists(rLastTickPath))
+                {
+                    File.Delete(rLastTickPath);
+                }
+                TextWriter lastTickWriter = new StreamWriter(rLastTickPath);
+                lastTickWriter.WriteLine(tickCounter);
+                lastTickWriter.Close();
             }
 
             void SaveBeginPoint()
@@ -264,6 +316,7 @@
                 TextWriter beginWriter = new StreamWriter(rBeginAtPath);
                 beginWriter.WriteLine(beginIndex);
                 beginWriter.WriteLine(currentThemeIndex);
+                beginWriter.WriteLine(tickCounter);
                 beginWriter.Close();
             }
 
@@ -288,10 +341,6 @@
                     Console.Write(c);
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.Write(" ");
-
-                    DisplayTotalProgress();
-                    DisplayNextSession();
-
                 }
 
                 else if (sessionType == "--SHORT")
@@ -304,9 +353,6 @@
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.Write(b);
                     Console.Write(" ");
-
-                    DisplayTotalProgress();
-                    DisplayNextSession();
                 }
 
                 else
@@ -319,11 +365,9 @@
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.Write(b);
                     Console.Write(" ");
-
-                    DisplayTotalProgress();
-                    DisplayNextSession();
                 }
-
+                DisplayTotalProgress();
+                DisplayNextSession();
                 System.Threading.Thread.Sleep(tickTock);
             }
 
@@ -372,6 +416,7 @@
                 if (routineTypeDaily)
                 {
                     if (File.Exists(rLastSessionPath)) File.Delete(rLastSessionPath);
+                    if (File.Exists(rLastTickPath)) File.Delete(rLastTickPath);
                 }
                 Console.WriteLine("Press a key to return to the main menu.");
                 Console.ReadKey();
