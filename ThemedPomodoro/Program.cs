@@ -3,7 +3,7 @@ public partial class Mode
 {
     public static void Main()
     {
-        TestBox();
+        //TestBox();
         MainMenu();
         static void MainMenu()
         {
@@ -139,6 +139,7 @@ public partial class Mode
             {
                 string rLastSessionPath = configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastSession.txt";
                 string rBeginAtPath = configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_beginAt.txt";
+                string rLastTickPath = configFolderPath + @"\" + defaultRoutine + @"\" + defaultRoutine + @"_lastTick.txt";
                 if (routineLoaded && !routineTypeDaily)
                 {
                     if (!File.Exists(rLastSessionPath))
@@ -172,6 +173,15 @@ public partial class Mode
                     else
                     {
                         cycleTeriaryAvailable = false;
+                    }
+                }
+
+                if (routineLoaded)
+                {
+                    if (File.Exists(rLastTickPath))
+                    {
+                        dailySecondaryAvailable = true;
+                        cycleTeriaryAvailable = true;
                     }
                 }
             }

@@ -99,10 +99,8 @@ v0.9.2.2 Working Beta - Testing
 - [x] Pause on ReadKey instead of ReadLine.
 
 v0.9.2.3 Working Beta - Testing
-- [] Resume interrupted 1st session
-
-v0.9.2.3 Working Beta - Testing
-- [] Update tray icon only when reached a breakpoint, not every second.
+- [x] Resume interrupted 1st session
+- [x] Update tray icon only when reached a breakpoint, not every second.
 
 v1.0 - Stable
 - [ ] Tested

@@ -58,12 +58,12 @@
             double ticksCount;
             int beginAt = 0;
             int beginIndex = 0;
-            //int beginThemeIndex = 0;
             var firstMessage = true;
             bool resumingInterrupted = false;
             double tickCounter = 0;
             int savedRoutineOrder = 0;
             bool checkForLastTickFile = false;
+            List<double> iconOccurence = new List<double>();
 
             DisplayInitialMessage();
             LoadRoutineToRun();
@@ -127,6 +127,7 @@
 
             void ResumeInterrupted(string s)
             {
+                resumingInterrupted = true;
                 if (File.Exists(rBeginAtPath))
                 {
                     if (s != null)
@@ -155,7 +156,6 @@
                             beginAt = 0;
                             sessionCounter = 1;
                         }
-                        resumingInterrupted = true;
                     }
                 }
             }
@@ -166,7 +166,6 @@
 
             void Run()
             {
-
                 for (int i = beginAt; i < routineOrder.Count; i++)
                 {
                     if (sessionCounter > (sets * sessions))
@@ -215,11 +214,11 @@
                     }
                     SaveBeginPoint();
                 }
-
             }
 
             void Session(string session)
             {
+                iconOccurence.Clear();
                 sessionType = session;
                 bool firstTick = true;
                 ticksCount = 0;
@@ -228,10 +227,9 @@
                     ticksCount = focusLength;
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red.ico");
                     Console.Beep(700, 1000);
-                    if (resumingInterrupted == true && routineOrder[savedRoutineOrder] == "--FOCUS" && File.Exists(rLastTickPath)) //&& skippedBreak == false
+                    if (resumingInterrupted == true && routineOrder[savedRoutineOrder] == "--FOCUS" && File.Exists(rLastTickPath))
                     {
                         ticksCount = double.Parse(File.ReadLines(rLastTickPath).ElementAtOrDefault(0));
-
                     }
                 }
                 else if (sessionType == "--SHORT")
@@ -473,9 +471,11 @@
 
                 double timeRounded = 100 - Math.Round(time / 10, MidpointRounding.AwayFromZero) * 10;
 
-                if (timeRounded != 100)
+
+                if (time % 10 == 0 && timeRounded != 100 && !iconOccurence.Contains(timeRounded))
                 {
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\" + iconColor + timeRounded + ".ico");
+                    iconOccurence.Add(timeRounded);
                 }
             }
 
