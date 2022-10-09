@@ -9,7 +9,7 @@
             tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
 
             int tick = 1000; // default: 1000
-            int divider = 4; // default: 1, speed up = 300;
+            int divider = 3; // default: 1, speed up = 300;
             Console.Clear();
 
             //Input from Program.cs
@@ -471,8 +471,7 @@
 
                 double timeRounded = 100 - Math.Round(time / 10, MidpointRounding.AwayFromZero) * 10;
 
-
-                if (time % 10 == 0 && timeRounded != 100 && !iconOccurence.Contains(timeRounded))
+                if (timeRounded != 100 && !iconOccurence.Contains(timeRounded))
                 {
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\" + iconColor + timeRounded + ".ico");
                     iconOccurence.Add(timeRounded);
