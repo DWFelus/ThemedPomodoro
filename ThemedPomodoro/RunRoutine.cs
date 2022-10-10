@@ -9,7 +9,7 @@
             tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\orange.ico");
 
             int tick = 1000; // default: 1000
-            int divider = 3; // default: 1, speed up = 300;
+            int divider = 1; // default: 1, speed up = 300;
             Console.Clear();
 
             //Input from Program.cs
@@ -262,10 +262,10 @@
                     }
 
                     Tick(i, tick);
-                    if (!firstTick && i % 60 == 0 && sessionType == "--FOCUS" && i > 60)
-                    {
-                        Console.Beep(500, 100);
-                    }
+                    //if (!firstTick && i % 60 == 0 && sessionType == "--FOCUS" && i > 60)
+                    //{
+                    //    Console.Beep(500, 100);
+                    //}
                     firstTick = false;
 
                     if (session == "--FOCUS")
@@ -474,6 +474,7 @@
                 if (timeRounded != 100 && !iconOccurence.Contains(timeRounded))
                 {
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\" + iconColor + timeRounded + ".ico");
+                    if (timeRounded == 0) Console.Beep(500, 100);
                     iconOccurence.Add(timeRounded);
                 }
             }

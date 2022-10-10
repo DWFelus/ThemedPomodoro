@@ -102,6 +102,9 @@ v0.9.2.3 Working Beta - Testing
 - [x] Resume interrupted 1st session
 - [x] Update tray icon only when reached a breakpoint, not every second.
 
+v0.9.2.4 Working Beta - Testing
+- [x] Beep once when session is nearing the end.
+
 v1.0 - Stable
 - [ ] Tested
 - [ ] Build
