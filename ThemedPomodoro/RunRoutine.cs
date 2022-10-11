@@ -227,7 +227,7 @@
                     ticksCount = focusLength;
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\red.ico");
                     Console.Beep(700, 1000);
-                    if (resumingInterrupted == true && routineOrder[savedRoutineOrder] == "--FOCUS" && File.Exists(rLastTickPath))
+                    if (resumingInterrupted == true && File.Exists(rLastTickPath)) //&& routineOrder[savedRoutineOrder] == "--FOCUS"
                     {
                         ticksCount = double.Parse(File.ReadLines(rLastTickPath).ElementAtOrDefault(0));
                     }
@@ -262,12 +262,8 @@
                     }
 
                     Tick(i, tick);
-                    //if (!firstTick && i % 60 == 0 && sessionType == "--FOCUS" && i > 60)
-                    //{
-                    //    Console.Beep(500, 100);
-                    //}
-                    firstTick = false;
 
+                    firstTick = false;
                     if (session == "--FOCUS")
                     {
                         SaveLastTick();
@@ -364,14 +360,45 @@
                     Console.Write(b);
                     Console.Write(" ");
                 }
+
                 DisplayTotalProgress();
                 DisplayNextSession();
+                DisplaySessionColorLabel(sessionType);
+
                 System.Threading.Thread.Sleep(tickTock);
             }
 
             void DisplayTotalProgress()
             {
                 Console.WriteLine(" - Total Progress: {0}/{1}", beginIndex + 1, routineOrder.Count);
+            }
+
+            void DisplaySessionColorLabel(string sessionType)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine();
+                if (sessionType == "--FOCUS")
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkRed;
+                }
+                else if (sessionType == "--SHORT")
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
+                }
+                for (int i = 0; i < 6; i++)
+                {
+                    for (int j = 0; j < 101; j++)
+                    {
+                        Console.Write(" ");
+                    }
+                    Console.WriteLine();
+                }
+
+                Console.BackgroundColor = ConsoleColor.Black;
             }
 
             void DisplayNextSession()
@@ -471,7 +498,7 @@
 
                 double timeRounded = 100 - Math.Round(time / 10, MidpointRounding.AwayFromZero) * 10;
 
-                if (timeRounded != 100 && !iconOccurence.Contains(timeRounded))
+                if (timeRounded != 100 && !iconOccurence.Contains(timeRounded) && timeRounded % 10 == 0)
                 {
                     tray.Icon = new Icon(Environment.CurrentDirectory + "\\icons\\" + iconColor + timeRounded + ".ico");
                     if (timeRounded == 0) Console.Beep(500, 100);

@@ -364,24 +364,68 @@ public partial class Mode
 
                     if (routineTypeDaily)
                     {
-                        Console.WriteLine("Q - start/restart the default daily routine");
+                        Console.Write("Q - start/restart the default daily routine from ");
+                        Console.BackgroundColor = ConsoleColor.DarkCyan;
+                        Console.Write("FIRST THEME");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Write(" and the ");
+                        Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                        Console.WriteLine("FIRST SESSION");
+                        Console.BackgroundColor = ConsoleColor.Black;
                         if (dailySecondaryAvailable)
                         {
-                            Console.WriteLine("A - resume the default interrupted daily routine");
+                            Console.Write("A - resume the default ");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.Write("INTERRUPTED");
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write(" daily routine from ");
+                            Console.BackgroundColor = ConsoleColor.DarkCyan;
+                            Console.Write("LAST THEME");
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write(" and the ");
+                            Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                            Console.WriteLine("LAST SESSION");
+                            Console.BackgroundColor = ConsoleColor.Black;
                         }
                     }
                     else
                     {
                         if (lastSessionPresent)
                         {
-                            Console.WriteLine("Q - resume the default cycle routine from the first session");
+                            Console.Write("Q - resume the default cycle routine from ");
+                            Console.BackgroundColor = ConsoleColor.DarkCyan;
+                            Console.Write("LAST THEME");
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write(" and the ");
+                            Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                            Console.WriteLine("FIRST SESSION");
+                            Console.BackgroundColor = ConsoleColor.Black;
                         }
 
-                        Console.WriteLine("A - start/restart the default, full cycle routine from it's first theme");
+                        Console.Write("A - start/restart the default, full cycle routine from it's ");
+                        Console.BackgroundColor = ConsoleColor.DarkCyan;
+                        Console.Write("FIRST THEME");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Write(" and ");
+                        Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                        Console.WriteLine("FIRST SESSION");
+                        Console.BackgroundColor = ConsoleColor.Black;
+
 
                         if (cycleTeriaryAvailable)
                         {
-                            Console.WriteLine("Z - resume the default interrupted cycle routine");
+                            Console.Write("Z - resume the default ");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.Write("INTERRUPTED");
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write(" cycle routine from ");
+                            Console.BackgroundColor = ConsoleColor.DarkCyan;
+                            Console.Write("LAST THEME");
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write(" and the ");
+                            Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                            Console.WriteLine("LAST SESSION");
+                            Console.BackgroundColor = ConsoleColor.Black;
                         }
                     }
                     Console.WriteLine();

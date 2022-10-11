@@ -105,6 +105,11 @@ v0.9.2.3 Working Beta - Testing
 v0.9.2.4 Working Beta - Testing
 - [x] Beep once when session is nearing the end.
 
+v0.9.2.5 Working Beta - Testing
+- [x] Added session color label for current session distintion when away from the monitor.
+- [x] Fixed issue where session did not resume at the correct tick.
+- [x] Improved option readability in the main menu.
+
 v1.0 - Stable
 - [ ] Tested
 - [ ] Build
